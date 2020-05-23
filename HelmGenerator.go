@@ -11,6 +11,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"strings"
 )
 
 const apiVersion = "p1.dsop.io/v1beta1"
@@ -98,7 +99,8 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 	client.ClientOnly = true
 	client.DryRun = true
 	client.DisableHooks = false
-	client.SkipCRDs = false
+	client.IncludeCRDs = true
+	client.SubNotes = true
 
 	// Load chart
 	chart, err := loader.Load(g.ChartPath)
@@ -110,7 +112,9 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 	client.ReleaseName = g.ReleaseName
 	client.Namespace = g.Namespace
 
-	var vals chartutil.Values
+	// Start with default chart values
+	vals, err := chartutil.CoalesceValues(chart, chart.Values)
+
 	// Parse the values files
 	for _, file := range g.ValueFiles {
 		val, err := chartutil.ReadValuesFile(file)
@@ -126,7 +130,6 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 	if err != nil {
 		return "", errors.Errorf("Failed to read byte values: %v", err)
 	}
-
 	vals = mergeMaps(vals, val)
 
 	// Run template (dry run install)
@@ -135,7 +138,15 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 		return "", errors.Errorf("Failed to run chart install: %v", err)
 	}
 
-	return r.Manifest, nil
+	// Get base template
+	templateString := r.Manifest
+
+	// Cat base manifests with hook manifests
+	for _, hook := range r.Hooks {
+		templateString = strings.Join([]string{templateString, hook.Manifest}, "\n---\n")
+	}
+
+	return templateString, nil
 }
 
 // mergeMaps will take in 2 maps and merge the two
