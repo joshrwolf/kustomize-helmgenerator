@@ -1,4 +1,4 @@
-apiVersion: wolfs.io/v1beta1
+apiVersion: p1.dsop.io/v1beta1
 kind: HelmGenerator
 metadata:
   name: helmGenerator

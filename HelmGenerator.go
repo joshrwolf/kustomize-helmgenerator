@@ -13,7 +13,7 @@ import (
 	"os"
 )
 
-const apiVersion = "wolfs.io/v1beta1"
+const apiVersion = "p1.dsop.io/v1beta1"
 const kind = "HelmGenerator"
 
 type kvMap map[string]string
