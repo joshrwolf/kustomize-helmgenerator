@@ -2,3 +2,4 @@ HelmGenerator
 coverage.txt
 .github_token
 .idea
+dist

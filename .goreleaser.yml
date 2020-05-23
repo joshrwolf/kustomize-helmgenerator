@@ -1,0 +1,31 @@
+project_name: kustomize-helmgenerator
+
+env:
+  - GO111MODULE=on
+
+env_files:
+  github_token: .github_token
+
+before:
+  hooks:
+    - go mod tidy
+
+builds:
+  - binary: HelmGenerator
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - windows
+      - linux
+    goarch:
+      - amd64
+
+archives:
+  - format: binary
+
+release:
+  github:
+    owner: joshrwolf
+    name: kustomize-helmgenerator
+  name_template: "Version {{.Version}}"
