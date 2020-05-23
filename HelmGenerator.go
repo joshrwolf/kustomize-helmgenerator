@@ -97,6 +97,8 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 	client := action.NewInstall(actionConfig)
 	client.ClientOnly = true
 	client.DryRun = true
+	client.DisableHooks = false
+	client.SkipCRDs = false
 
 	// Load chart
 	chart, err := loader.Load(g.ChartPath)
