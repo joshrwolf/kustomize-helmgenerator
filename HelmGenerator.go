@@ -2,16 +2,18 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
+	"log"
+	"os"
+	"strings"
+
 	"github.com/pkg/errors"
+	"go.mozilla.org/sops/v3/decrypt"
 	"gopkg.in/yaml.v3"
 	"helm.sh/helm/v3/pkg/action"
 	"helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/chartutil"
 	"helm.sh/helm/v3/pkg/cli"
-	"io/ioutil"
-	"log"
-	"os"
-	"strings"
 )
 
 const apiVersion = "p1.dsop.io/v1beta1"
@@ -49,6 +51,9 @@ type HelmGenerator struct {
 
 	// Values is a generic map of values that are applied via --set
 	Values string `json:"values,omitempty" yaml:"values,omitempty"`
+
+	// SopsValueFiles is a generic list of values files encrypted via sops
+	SopsValueFiles []string `json:"sopsValueFiles,omitempty" yaml:"sopsValueFiles,omitempty"`
 }
 
 func main() {
@@ -67,7 +72,8 @@ func main() {
 
 func processHelmGenerator(fn string) (string, error) {
 	data, err := ioutil.ReadFile(fn)
-	if err != nil {}
+	if err != nil {
+	}
 
 	input := HelmGenerator{
 		TypeMeta: TypeMeta{},
@@ -76,10 +82,12 @@ func processHelmGenerator(fn string) (string, error) {
 		},
 	}
 	err = yaml.Unmarshal(data, &input)
-	if err != nil {}
+	if err != nil {
+	}
 
 	templatedOut, err := input.helmTemplate()
-	if err != nil {}
+	if err != nil {
+	}
 
 	return templatedOut, err
 }
@@ -131,6 +139,20 @@ func (g *HelmGenerator) helmTemplate() (string, error) {
 		return "", errors.Errorf("Failed to read byte values: %v", err)
 	}
 	vals = mergeMaps(vals, val)
+
+	// Parse any values files encrypted via sops
+	for _, sopsFile := range g.SopsValueFiles {
+		// Decrypt and read the values file (always a yaml for helm)
+		decryptedData, err := decrypt.File(sopsFile, "yaml")
+		if err != nil {
+			return "", errors.Errorf("Failed to read sops encrypted file: %s, %v", sopsFile, err)
+		}
+
+		// Parse the decrypted data into helm values map
+		val, err := chartutil.ReadValues(decryptedData)
+
+		vals = mergeMaps(vals, val)
+	}
 
 	// Run template (dry run install)
 	r, err := client.Run(chart, vals)

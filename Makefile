@@ -17,4 +17,3 @@ release:
 .PHONY: publish-release
 publish-release:
 	goreleaser --rm-dist
-
