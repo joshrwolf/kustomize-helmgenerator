@@ -1,0 +1,8 @@
+image:
+  name: rancher/rancher
+  tag: stable
+
+job:
+  image:
+    name: rancher/pause
+    tag: stable

@@ -8,8 +8,10 @@ require (
 	github.com/Azure/go-autorest/autorest/azure/auth v0.5.0 // indirect
 	github.com/Azure/go-autorest/autorest/to v0.4.0 // indirect
 	github.com/Azure/go-autorest/autorest/validation v0.3.0 // indirect
+	github.com/Masterminds/semver/v3 v3.1.0
 	github.com/aws/aws-sdk-go v1.33.1 // indirect
 	github.com/fatih/color v1.9.0 // indirect
+	github.com/go-git/go-git/v5 v5.1.0
 	github.com/hashicorp/golang-lru v0.5.4 // indirect
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c // indirect
 	github.com/lib/pq v1.7.0 // indirect
