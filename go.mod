@@ -16,7 +16,6 @@ require (
 	github.com/howeyc/gopass v0.0.0-20190910152052-7cb4b85ec19c // indirect
 	github.com/lib/pq v1.7.0 // indirect
 	github.com/mattn/go-colorable v0.1.7 // indirect
-	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.6.0 // indirect
 	go.mozilla.org/sops/v3 v3.5.0
 	go.opencensus.io v0.22.4 // indirect
