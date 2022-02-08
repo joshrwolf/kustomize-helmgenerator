@@ -26,6 +26,6 @@ archives:
 
 release:
   github:
-    owner: joshrwolf
+    owner: atoy3731
     name: kustomize-helmgenerator
   name_template: "Version {{.Version}}"

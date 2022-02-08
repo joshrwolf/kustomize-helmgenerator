@@ -1,6 +1,6 @@
-module github.com/joshrwolf/kustomize-helmgenerator
+module github.com/atoy3731/kustomize-helmgenerator
 
-go 1.14
+go 1.17
 
 require (
 	cloud.google.com/go v0.60.0 // indirect
