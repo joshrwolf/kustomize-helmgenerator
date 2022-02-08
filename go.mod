@@ -1,4 +1,4 @@
-module github.com/joshrwolf/kustomize-helmgenerator
+module github.com/atoy3731/kustomize-helmgenerator
 
 go 1.17
 
